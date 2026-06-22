@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>万联有客 AI销售秘书Agent</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="rail">
+        <div class="window-dots" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+
+        <div class="brand-row">
+          <img class="brand-logo" src="./assets/wanlian-agent-logo.svg" alt="万联有客" />
+          <div>
+            <strong>万联有客</strong>
+            <small>AI native CRM</small>
+          </div>
+        </div>
+
+        <button class="global-search" id="openSearch" aria-label="搜索对话和创建新对话">
+          <span>⌕</span>
+          <em>搜索...</em>
+          <kbd>⌘ K</kbd>
+        </button>
+
+        <section class="ai-card" aria-label="AI销售秘书">
+          <div class="ai-glow"></div>
+          <img class="ai-avatar" src="./assets/wanlian-avatar.png" alt="AI销售秘书形象" />
+          <div class="ai-card-copy">
+            <strong>Sales Agent</strong>
+            <span>专业销售CRM领航智能体</span>
+          </div>
+          <div class="ai-status"><span></span>在线 · 智能分析中</div>
+        </section>
+
+        <nav class="main-nav" aria-label="Agent能力导航">
+          <button class="nav-btn active" data-mode="new">
+            <span class="nav-icon">✎</span>
+            <span>新对话</span>
+            <kbd>⌘ K</kbd>
+          </button>
+          <button class="nav-btn" data-mode="knowledge">
+            <span class="nav-icon">□</span>
+            <span>知识库</span>
+            <i>›</i>
+          </button>
+          <div class="sub-nav knowledge-sub-nav" aria-label="知识库子目录">
+            <button data-knowledge="cases">优秀销售案例</button>
+            <button data-knowledge="sop">面客话术SOP</button>
+            <button data-knowledge="products">公司产品知识</button>
+            <button data-knowledge="policy">最新销售政策</button>
+          </div>
+          <button class="nav-btn" data-mode="favorite">
+            <span class="nav-icon">☆</span>
+            <span>收藏</span>
+          </button>
+          <button class="nav-btn" data-mode="observatory">
+            <span class="nav-icon">✦</span>
+            <span>观星台</span>
+            <i>›</i>
+          </button>
+          <div class="sub-nav observatory-sub-nav" aria-label="观星台子目录">
+            <button data-observatory="dashboard">销售数据看板</button>
+            <button data-observatory="quality">销售质检</button>
+            <button data-observatory="talent">人才报告（销售能力）</button>
+          </div>
+        </nav>
+
+        <section class="history" id="historyList">
+          <p>历史对话</p>
+          <button><span class="task-dot"></span>恒驰冷链客户洞察</button>
+          <button><span class="task-dot"></span>华东物流机会分析</button>
+          <button><span class="task-dot"></span>徐工电车商机评分</button>
+          <button><span class="task-dot done"></span>上海物流案例匹配</button>
+          <button><span class="task-dot done"></span>车险组合方案生成</button>
+          <button><span class="task-dot warn"></span>区域商机流失预警</button>
+        </section>
+
+        <div class="account">
+          <button class="voice-entry" title="AI语音助手">
+            <span>☎</span>
+            <strong>AI语音助手</strong>
+          </button>
+          <button class="mini-send" title="发送任务">↑</button>
+        </div>
+      </aside>
+
+      <main class="chat">
+        <header class="chat-top">
+          <div class="top-left">
+            <button class="top-icon" title="收起侧边栏">◧</button>
+            <button class="top-icon" title="新建任务">✎</button>
+          </div>
+          <div class="title-stack">
+            <strong id="chatTitle">新对话</strong>
+            <span>AI 生成可能有误，请核实</span>
+          </div>
+          <div class="top-right">
+            <button class="top-icon voice-assistant-top" title="电话沟通同时给予实时建议和会后智能总结" aria-label="电话沟通同时给予实时建议和会后智能总结">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 3.4c.6-.4 1.4-.3 1.9.2l2.2 2.7c.5.6.5 1.4.1 2l-1.2 1.9c1.1 2 2.8 3.8 4.8 4.9l2-1.2c.6-.4 1.4-.3 2 .2l2.6 2.2c.6.5.7 1.3.3 1.9-.8 1.3-2.2 2.7-3.8 2.8-3.4.2-7.3-1.8-10.4-4.9S2 9 2.2 5.6c.1-1.6 1.5-3 2.8-3.8l1.6 1.6z"></path></svg>
+            </button>
+            <button class="top-icon message-center-toggle" title="消息中心" aria-label="消息中心">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13.5h3.2l8.2 4.7V5.8l-8.2 4.7H4v3z"></path><path d="M18 9.4c1.1 1.3 1.1 3.9 0 5.2"></path><path d="M20.6 7.2c2.1 2.6 2.1 7 0 9.6"></path></svg>
+              <span class="message-badge" id="messageBadge">3</span>
+            </button>
+            <button class="top-icon" title="任务窗口">▢</button>
+          </div>
+        </header>
+
+        <section class="conversation" id="conversation">
+          <div class="empty-state" id="emptyState">
+            <h1>有什么我能帮你的？</h1>
+            <div class="suggestions">
+              <button>帮我分析上海恒驰冷链物流有限公司</button>
+              <button>今日工作任务</button>
+              <button>生成明天下午客户拜访准备包</button>
+              <button>把客户需求结构化为销售机会</button>
+              <button>匹配同行业同区域成交案例</button>
+              <button>查询客户车辆与运力规模</button>
+              <button>查询公司车辆产品库</button>
+              <button>生成销售话术和异议处理</button>
+              <button>开启会议总结更新CRM记录</button>
+              <button>预测这个商机的成交风险</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="composer-wrap" aria-label="输入任务">
+          <div class="composer">
+            <textarea id="promptInput" rows="1" placeholder="输入问题或任务"></textarea>
+            <div class="attach-menu" id="attachMenu" hidden>
+              <button data-attach-action="upload"><span>⇧</span><strong>上传文件/图片</strong></button>
+              <button data-attach-action="album"><span>▧</span><strong>相册</strong></button>
+            </div>
+            <div class="composer-actions">
+              <div class="left-actions">
+                <button class="plus" title="添加文件">＋</button>
+                <span class="divider"></span>
+                <button class="mode-pill active" data-template="我今天有哪些工作任务，哪些客户需要优先跟进，有哪些日历待办提醒">销售任务 ›</button>
+                <button class="mode-btn" data-template="您需要我为您分析哪个名称的客户档案呢，我将为您生成360客户画像">客户洞察</button>
+                <button class="mode-btn" data-template="我想把客户刚说的需求整理成一条销售机会，帮我补齐客户、线路、车辆、预算和时间">机会发布</button>
+                <button class="mode-btn" data-template="我刚开完客户会议，帮我整理会议纪要，并生成需要更新到CRM的跟进内容">会议纪要</button>
+                <button class="mode-btn" data-template="帮我找几个同行业、同区域的成交案例，顺便整理成可以复用的销售打法">案例匹配</button>
+                <button class="mode-btn more-mode">更多</button>
+              </div>
+              <div class="right-actions">
+                <button class="voice-input" title="语音输入" aria-label="语音输入">◉</button>
+                <button class="send" id="sendBtn" title="发送任务">↑</button>
+              </div>
+            </div>
+            <div class="voice-panel" id="voicePanel" hidden>
+              <button class="voice-cancel" id="voiceCancel" aria-label="取消语音输入">×</button>
+              <div class="voice-wave" aria-label="正在语音输入">
+                <span></span><span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span><span></span>
+              </div>
+              <button class="voice-submit" id="voiceSubmit" aria-label="发送语音输入">↑</button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="toast" id="toast"></div>
+    <div class="push-toast" id="pushToast" aria-live="polite">
+      <i>!</i>
+      <div>
+        <strong></strong>
+        <span></span>
+      </div>
+    </div>
+    <aside class="message-center" id="messageCenter" hidden aria-label="Agent消息中心">
+      <header>
+        <div>
+          <strong>消息中心</strong>
+          <span>Agent 推送记录</span>
+        </div>
+        <button id="closeMessageCenter" aria-label="关闭消息中心">×</button>
+      </header>
+      <div class="message-list" id="messageList"></div>
+    </aside>
+    <div class="search-modal" id="searchModal" hidden>
+      <div class="search-backdrop" data-close-search></div>
+      <section class="search-panel" role="dialog" aria-modal="true" aria-label="搜索">
+        <div class="search-box">
+          <span>⌕</span>
+          <input id="searchInput" type="search" placeholder="搜索" />
+          <button data-close-search aria-label="关闭搜索">×</button>
+        </div>
+        <div class="search-section">
+          <p>快捷创建</p>
+          <button class="search-create" id="modalNewChat">
+            <span>⊕</span>
+            <strong>新对话</strong>
+            <i>↩</i>
+          </button>
+        </div>
+        <div class="search-section">
+          <p>最近对话</p>
+          <div class="recent-list" id="recentList"></div>
+        </div>
+      </section>
+    </div>
+    <script src="./app.js"></script>
+  </body>
+</html>
