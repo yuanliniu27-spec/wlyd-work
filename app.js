@@ -375,11 +375,13 @@ function sendGeneralResponse(text) {
               <li>天气数据以实时气象接口为准，出行前可再次刷新确认。</li>
             </ul>
           </section>
+          ${buildNextActions({ title: "天气查询" })}
         </div>
       </div>
     `;
     stack.appendChild(response);
     attachCardActions(response.querySelector(".agent-card"));
+    bindNextActions(response.querySelector(".next-actions"));
     setTimeout(() => {
       response.querySelector(".search-line").innerHTML = `<span class="done"></span> 联网查询完成，已返回${city}今日天气。`;
     }, 580);
@@ -397,11 +399,13 @@ function sendGeneralResponse(text) {
             <li>你可以让我分析客户、查询车辆产品库、生成拜访准备包、整理会议纪要，或直接问通识类问题。</li>
           </ul>
         </section>
+        ${buildNextActions({ title: "问候" })}
       </div>
     </div>
   `;
   stack.appendChild(response);
   attachCardActions(response.querySelector(".agent-card"));
+  bindNextActions(response.querySelector(".next-actions"));
   response.scrollIntoView({ behavior: "smooth", block: "end" });
 }
 
@@ -458,8 +462,82 @@ function streamSuggestionResult(response, text) {
     if (index >= blocks.length) {
       clearInterval(timer);
       search.innerHTML = `<span class="done"></span> 联网查询完成，已生成结构化结果。`;
+      output.insertAdjacentHTML("beforeend", buildNextActions(result));
+      bindNextActions(output.lastElementChild);
+      output.lastElementChild.scrollIntoView({ behavior: "smooth", block: "end" });
     }
   }, 520);
+}
+
+function buildNextActions(result) {
+  const actions = getNextActions(result.title);
+  return `
+    <section class="next-actions">
+      <strong>下一步动作</strong>
+      <p>${actions.prompt}</p>
+      <div>
+        ${actions.buttons.map((label) => `<button data-next-action="${label}">${label}</button>`).join("")}
+      </div>
+    </section>`;
+}
+
+function getNextActions(title) {
+  if (title.includes("客户洞察")) {
+    return {
+      prompt: "需要我现在为你录入一条该客户的线索记录吗？",
+      buttons: ["录入客户线索", "生成拜访准备包", "继续匹配成交案例"]
+    };
+  }
+  if (title.includes("今日销售工作")) {
+    return {
+      prompt: "需要我把高优先级客户整理成今天的跟进清单吗？",
+      buttons: ["生成今日跟进清单", "创建日历提醒", "查看超时客户"]
+    };
+  }
+  if (title.includes("销售机会")) {
+    return {
+      prompt: "需要我把这条机会保存为草稿并发起发布审批吗？",
+      buttons: ["保存机会草稿", "补齐机会字段", "发起发布审批"]
+    };
+  }
+  if (title.includes("CRM更新")) {
+    return {
+      prompt: "需要我把会议纪要整理成 CRM 跟进记录并等待你确认写入吗？",
+      buttons: ["生成CRM草稿", "提取待办事项", "创建下次跟进提醒"]
+    };
+  }
+  if (title.includes("案例匹配")) {
+    return {
+      prompt: "需要我基于这些案例生成一版可直接面客的话术吗？",
+      buttons: ["生成面客话术", "导出案例摘要", "匹配更多案例"]
+    };
+  }
+  if (title.includes("车辆产品库")) {
+    return {
+      prompt: "需要我基于这些车型生成一版车辆报价和租赁方案吗？",
+      buttons: ["生成报价方案", "匹配客户车型需求", "发送给销售确认"]
+    };
+  }
+  if (title.includes("车辆与运力")) {
+    return {
+      prompt: "需要我继续把车辆与运力信息转成销售机会字段吗？",
+      buttons: ["转成销售机会", "查询车辆产品库", "生成拜访问题"]
+    };
+  }
+  return {
+    prompt: "需要我继续帮你推进下一步销售动作吗？",
+    buttons: ["生成跟进记录", "创建待办提醒", "继续深挖需求"]
+  };
+}
+
+function bindNextActions(section) {
+  section.querySelectorAll("button").forEach((button) => {
+    button.addEventListener("click", () => {
+      const text = button.dataset.nextAction;
+      setPrompt(text);
+      sendSuggestionTask(text);
+    });
+  });
 }
 
 function buildRadar(dimensions) {
@@ -997,8 +1075,8 @@ $$(".nav-btn").forEach((button) => {
         <div class="empty-state" id="emptyState">
           <h1>有什么我能帮你的？</h1>
           <div class="suggestions">
-            <button>帮我分析上海恒驰冷链物流有限公司</button>
             <button>今日工作任务</button>
+            <button>帮我分析上海恒驰冷链物流有限公司</button>
             <button>生成明天下午客户拜访准备包</button>
             <button>把客户需求结构化为销售机会</button>
             <button>匹配同行业同区域成交案例</button>
